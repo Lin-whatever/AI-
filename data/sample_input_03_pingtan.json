@@ -1,0 +1,33 @@
+{
+  "scenario": "平潭岛3日游 — 高铁已购+海鲜落日+交通查询跳过",
+  "date": "2026-07-12",
+  "platform": "desktop",
+  "conversation": [
+    {"turn": 1, "user": "我想去平潭", "agent_action": "city_matcher → 平潭→福州市 ✓"},
+    {"turn": 2, "user": "我计划七月十三号出发", "agent_action": "采集日期→7/13出发"},
+    {"turn": 3, "user": "我已经买好高铁票了", "agent_action": "跳过交通查询→直接问天数"},
+    {"turn": 4, "user": "从十四号开始玩，玩三天", "agent_action": "确认7/14-16, 3天"},
+    {"turn": 5, "user": "总预算3000", "agent_action": "采集预算"},
+    {"turn": 6, "user": "两个舍友", "agent_action": "3人结伴, 触发记忆→展示历史偏好"},
+    {"turn": 7, "user": "我要吃海鲜！我要看落日！", "agent_action": "7字段集齐→天气查询(阵雨)→搜索攻略→生成行程"}
+  ],
+  "collected_input": {
+    "city": "福州市(平潭县)",
+    "departure_date": "2026-07-13",
+    "play_start": "2026-07-14",
+    "days": 3,
+    "transport": "高铁(已购)",
+    "budget": 3000,
+    "people_count": 3,
+    "companions": "两个舍友",
+    "preferences": "吃海鲜、看落日",
+    "history_applied": "美食>景点、轻松节奏、朋友结伴"
+  },
+  "weather": "28-29C, 阵雨+雷暴可能",
+  "generated_itinerary": {
+    "day1": {"morning": "抵达+入住龙凤头", "afternoon": "北部湾风车田", "evening": "长江澳落日+海鲜烧烤"},
+    "day2": {"morning": "仙人井", "afternoon": "石牌洋+坛南湾", "evening": "海坛古城夜市"},
+    "day3": {"morning": "龙凤头沙滩", "afternoon": "最后一顿海鲜+返程"},
+    "budget": {"accommodation": 800, "ebike": 270, "meals_seafood": 540, "meals_daily": 360, "tickets": 105, "snacks": 150, "reserve": 775}
+  }
+}
