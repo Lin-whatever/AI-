@@ -1,0 +1,70 @@
+{
+  "config": {
+    "wide_screen_mode": true
+  },
+  "header": {
+    "template": "turquoise",
+    "title": {
+      "tag": "plain_text",
+      "content": "{city} {days}日游 | 预算 {budget}元"
+    }
+  },
+  "elements": [
+    {
+      "tag": "div",
+      "text": {
+        "tag": "lark_md",
+        "content": "**目的地**: {city}\n**天数**: {days}天\n**预算**: {budget}元\n**同行**: {companions}\n**偏好**: {preferences}"
+      }
+    },
+    {
+      "tag": "hr"
+    },
+    {
+      "tag": "markdown",
+      "content": "{daily_plan_md}"
+    },
+    {
+      "tag": "hr"
+    },
+    {
+      "tag": "markdown",
+      "content": "{budget_breakdown_md}"
+    },
+    {
+      "tag": "hr"
+    },
+    {
+      "tag": "markdown",
+      "content": "{tips_md}"
+    },
+    {
+      "tag": "action",
+      "actions": [
+        {
+          "tag": "button",
+          "text": {
+            "tag": "plain_text",
+            "content": "调整行程"
+          },
+          "type": "primary",
+          "value": {
+            "action": "adjust",
+            "city": "{city}"
+          }
+        },
+        {
+          "tag": "button",
+          "text": {
+            "tag": "plain_text",
+            "content": "重新规划"
+          },
+          "type": "default",
+          "value": {
+            "action": "restart"
+          }
+        }
+      ]
+    }
+  ]
+}

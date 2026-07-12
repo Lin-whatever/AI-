@@ -1,0 +1,44 @@
+{
+  "scenario": "乌鲁木齐4日游 — 含天气查询+中途调整",
+  "date": "2026-07-12",
+  "platform": "desktop",
+  "conversation": [
+    {"turn": 1, "user": "我想去新疆玩", "agent_action": "city_matcher → 新疆未匹配 → 列出可选城市"},
+    {"turn": 2, "user": "我想去乌鲁木齐", "agent_action": "city_matcher → 匹配乌鲁木齐市 ✓ → 确认日期"},
+    {"turn": 3, "user": "我计划玩4天", "agent_action": "追问预算"},
+    {"turn": 4, "user": "人均5000", "agent_action": "系统推断人数=5(历史记忆) → 确认后追问偏好"},
+    {"turn": 5, "user": "特别想去看风景", "agent_action": "6字段集齐 + departure_date=7/15 → 天气查询 → 沙尘预警 → 用户确认 → 生成行程"},
+    {"turn": 6, "user": "怎么突然下大雨啦？有没有什么室内好玩的地方", "agent_action": "实时调整: Day3南山户外→室内美术馆+馕产业园+大巴扎"},
+    {"turn": 7, "user": "好晒啊我走不动了，换个计划", "agent_action": "实时调整: Day3减负→缩短行程+增加休息"}
+  ],
+  "collected_input": {
+    "city": "乌鲁木齐市",
+    "departure_date": "2026-07-15",
+    "days": 4,
+    "budget": 25000,
+    "budget_type": "total",
+    "companions": "5人",
+    "people_count": 5,
+    "preferences": "看风景"
+  },
+  "weather_check": {
+    "source": "wttr.in / open-meteo",
+    "forecast_7_12": "22~35C, Clear, Dust storm",
+    "forecast_7_13": "24~37C, Clear, Dust storm",
+    "forecast_7_14": "25~38C, Partly Cloudy, Dust storm",
+    "travel_dates_note": "7/15-7/18超出精确预报范围，预计高温35-38C，沙尘可能残留"
+  },
+  "generated_itinerary": {
+    "day1": {"morning": "抵达+入住", "afternoon": "新疆博物馆", "evening": "红山公园+大巴扎"},
+    "day2": {"full_day": "天山天池+马牙山索道", "evening": "楼兰秘烤"},
+    "day3": {"full_day": "南山风景区+骑马+天山大峡谷", "evening": "五一星光夜市"},
+    "day4": {"morning": "水磨沟/燕儿窝", "afternoon": "干果采购+返程"},
+    "budget_breakdown": {"accommodation": 2400, "car_rental": 900, "tickets": 2500, "meals": 3000, "transport": 300, "snacks": 500, "reserve": 1400},
+    "total": 11000
+  },
+  "adjustment_rain": {
+    "trigger": "下雨了 (Day 3)",
+    "day3_revised": {"morning": "新疆美术馆", "noon": "馕文化产业园", "afternoon": "国际大巴扎深度", "evening": "海尔巴格餐厅"},
+    "day4": "不变"
+  }
+}

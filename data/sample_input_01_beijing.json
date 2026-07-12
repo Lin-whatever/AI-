@@ -1,0 +1,28 @@
+{
+  "scenario": "北京3日游 — 完整对话流程",
+  "date": "2026-07-12",
+  "platform": "desktop",
+  "conversation": [
+    {"turn": 1, "user": "我想去北京旅行", "agent_action": "city_matcher → 匹配北京市 ✓ → 追问天数"},
+    {"turn": 2, "user": "我计划玩3天", "agent_action": "追问预算"},
+    {"turn": 3, "user": "我的预算是4000元", "agent_action": "追问同行人"},
+    {"turn": 4, "user": "我跟我的两个舍友一起去", "agent_action": "追问偏好"},
+    {"turn": 5, "user": "我们最想去看天安门和故宫，吃一次正宗的北京烤鸭", "agent_action": "6字段集齐，联网搜索+生成行程"}
+  ],
+  "collected_input": {
+    "city": "北京市",
+    "days": 3,
+    "budget": 4000,
+    "budget_type": "total",
+    "companions": "两个舍友（共3人）",
+    "people_count": 3,
+    "preferences": "天安门、故宫必去；吃正宗北京烤鸭"
+  },
+  "generated_itinerary": {
+    "day1": {"morning": "天安门广场", "afternoon": "故宫博物院", "evening": "景山公园+四季民福烤鸭"},
+    "day2": {"morning": "八达岭长城", "afternoon": "奥林匹克公园外观", "evening": "便宜坊烤鸭"},
+    "day3": {"morning": "颐和园", "afternoon": "南锣鼓巷+什刹海", "evening": "返程"},
+    "budget_breakdown": {"accommodation": 1200, "meals": 900, "roast_duck": 800, "transport": 200, "tickets": 430, "other": 470},
+    "total": 4000
+  }
+}
