@@ -86,6 +86,19 @@
 | v1.4.0 | 增强 | 出行方式 + 高铁/机票班次查询 |
 | v1.4.1 | 存档 | 飞书适配暂缓，精简为纯桌面版 |
 
+## 测试
+
+  PASS test_direct_city
+  PASS test_alias_nickname
+  PASS test_scenic_to_city
+  PASS test_district_to_city
+  PASS test_no_match
+  PASS test_return_structure
+
+6 passed, 0 failed
+
+6个用例覆盖：城市直接匹配、别名匹配、景点映射、区县匹配、无匹配边界、返回结构完整性。
+
 ## 技术栈
 
 Python 3 / difflib / Hermes Agent 框架 / 飞书消息卡片 API / wttr.in / Open-Meteo

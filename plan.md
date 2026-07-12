@@ -1,3 +1,15 @@
+> **架构变更说明 (2026-07-12)**
+> 
+> 本文档为原始设计计划。在实际开发中，架构做了重大调整：
+> - **dialogue_mgr.py** → 删除。状态机逻辑改为 SKILL.md 中的自然语言指令，Agent 自行维护对话节奏。
+> - **web_scraper.py** → 删除。改为使用 Agent 原生 browser_navigate/terminal(curl) 工具抓取。
+> - **llm_integrator.py** → 删除。Agent 自身就是 LLM，无需额外调用大模型 API。
+> - **storage.py** → 删除。改用 Hermes memory 工具 + 文件写入。
+> 
+> 核心理念转变：Skill 不是独立微服务，而是 Agent 的"教练手册"。Agent 是执行者，Skill 是指导文档。
+> 
+> ---
+
 明白了！你希望拿到一份**完整无压缩、可直接复制保存为 `.md` 文件**的 `PLAN.md`。  
 
 下面就是**完整全文**，无任何删减，所有细节、表格、Mermaid 流程图、代码骨架、目录结构全部保留。你可以直接 **全选 → 复制**，然后在你的项目根目录下新建 `PLAN.md` 文件，粘贴保存即可。

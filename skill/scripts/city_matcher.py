@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """City fuzzy matcher for the Travel Planner skill.
 Usage: python3 city_matcher.py "<user_input>"
-Outputs JSON: {"matched": bool, "city": str|null, "input": str, "suggestions": [...]}
+Outputs JSON: {"matched": bool, "city": str|null, "input": str, "suggestions": [...], "confidence": "high"|"low"|"none"}
 """
 import json
 import sys
@@ -13,47 +13,74 @@ REF_DIR = Path(__file__).resolve().parent.parent / 'references'
 def load_json(filename):
     path = REF_DIR / filename
     if not path.exists():
-        return []
+        return {}
     with open(path, 'r', encoding='utf-8') as f:
         return json.load(f)
 
 def match_city(user_input):
     user_input = user_input.strip()
     if not user_input:
-        return {'matched': False, 'city': None, 'input': user_input, 'suggestions': []}
+        return {'matched': False, 'city': None, 'input': user_input,
+                'suggestions': [], 'confidence': 'none'}
 
-    # Step 1: check alias map
     aliases = load_json('city_alias_map.json')
-    if user_input in aliases:
-        return {'matched': True, 'city': aliases[user_input], 'input': user_input, 'suggestions': []}
-
-    # Step 2: auto-complete common short forms (append 市 if missing)
     cities = load_json('china_cities.json')
     if not cities:
-        return {'matched': False, 'city': None, 'input': user_input, 'suggestions': []}
+        return {'matched': False, 'city': None, 'input': user_input,
+                'suggestions': [], 'confidence': 'none'}
 
-    # Try direct match after appending 市/县/etc
-    for suffix in ['市', '县', '区']:
+    # Step 1: exact alias match
+    if user_input in aliases:
+        return {'matched': True, 'city': aliases[user_input], 'input': user_input,
+                'suggestions': [], 'confidence': 'high'}
+
+    # Step 2: auto-append suffix (市/县/区)
+    for suffix in ['市', '县', '区', '镇', '村']:
         candidate = user_input + suffix
         if candidate in cities:
-            return {'matched': True, 'city': candidate, 'input': user_input, 'suggestions': []}
+            return {'matched': True, 'city': candidate, 'input': user_input,
+                    'suggestions': [], 'confidence': 'high'}
 
-    # Step 3: fuzzy matching
-    matches = get_close_matches(user_input, cities, n=5, cutoff=0.45)
-    if matches:
-        if len(matches) == 1 or (matches and get_close_matches(user_input, cities, n=1, cutoff=0.7)):
-            # High confidence single match or first match is very close
-            best = get_close_matches(user_input, cities, n=1, cutoff=0.6)
-            if best:
-                return {'matched': True, 'city': best[0], 'input': user_input, 'suggestions': []}
-        # Multiple possible matches
-        return {'matched': False, 'city': None, 'input': user_input, 'suggestions': matches[:5]}
+    # Step 3: direct match in city list (e.g. "黄山" exact match but not alias)
+    if user_input in cities:
+        return {'matched': True, 'city': user_input, 'input': user_input,
+                'suggestions': [], 'confidence': 'high'}
 
-    return {'matched': False, 'city': None, 'input': user_input, 'suggestions': []}
+    # Step 4: fuzzy matching with tiered thresholds
+    # High confidence: cutoff 0.6
+    high_matches = get_close_matches(user_input, cities, n=5, cutoff=0.6)
+    if high_matches and len(high_matches) == 1:
+        return {'matched': True, 'city': high_matches[0], 'input': user_input,
+                'suggestions': [], 'confidence': 'high'}
+
+    # Medium confidence: cutoff 0.45 — present as suggestions
+    med_matches = get_close_matches(user_input, cities, n=5, cutoff=0.45)
+    if med_matches:
+        # If only 1 match at medium confidence, return as low-confidence match
+        # Agent should confirm: "请问你想去的是{med_matches[0]}吗？"
+        if len(med_matches) == 1:
+            return {'matched': True, 'city': med_matches[0], 'input': user_input,
+                    'suggestions': [], 'confidence': 'low'}
+        # Multiple matches: return as suggestions
+        return {'matched': False, 'city': None, 'input': user_input,
+                'suggestions': med_matches[:5], 'confidence': 'low'}
+
+    # Step 5: very short input (1-2 chars) — try substring match
+    if len(user_input) <= 2:
+        substring_matches = [c for c in cities if user_input in c]
+        if substring_matches:
+            # Sort by length (shorter = closer match)
+            substring_matches.sort(key=len)
+            return {'matched': False, 'city': None, 'input': user_input,
+                    'suggestions': substring_matches[:5], 'confidence': 'low'}
+
+    return {'matched': False, 'city': None, 'input': user_input,
+            'suggestions': [], 'confidence': 'none'}
 
 if __name__ == '__main__':
     if len(sys.argv) < 2:
-        print(json.dumps({'matched': False, 'city': None, 'input': '', 'suggestions': []}, ensure_ascii=False))
+        print(json.dumps({'matched': False, 'city': None, 'input': '',
+                         'suggestions': [], 'confidence': 'none'}, ensure_ascii=False))
         sys.exit(0)
     result = match_city(sys.argv[1])
     print(json.dumps(result, ensure_ascii=False))
